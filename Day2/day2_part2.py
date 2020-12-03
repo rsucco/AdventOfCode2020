@@ -13,10 +13,7 @@ def validate_password(password_raw):
     CHAR = password_data[2]
     PASS = password_data[3]
     # Make sure that one and only one of the positions specified matches the specified character
-    if (PASS[POS1] == CHAR) ^ (PASS[POS2] == CHAR):
-        return True
-    else:
-        return False
+    return (PASS[POS1] == CHAR) ^ (PASS[POS2] == CHAR)
 
 if __name__ == '__main__':
     # Read file into list of strings, one string per line

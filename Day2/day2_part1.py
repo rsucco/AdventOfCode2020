@@ -13,10 +13,7 @@ def validate_password(password_raw):
     CHAR = password_data[2]
     PASS = password_data[3]
     # Make sure the number of occurances of CHAR in the password is within the range specified in the policy
-    if PASS.count(CHAR) <= MAX and PASS.count(CHAR) >= MIN:
-        return True
-    else:
-        return False
+    return PASS.count(CHAR) <= MAX and PASS.count(CHAR) >= MIN
 
 if __name__ == '__main__':
     # Read file into list of strings, one string per line
