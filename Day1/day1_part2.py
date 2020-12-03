@@ -2,7 +2,7 @@
 
 import itertools
 
-# Find two numbers that sum to 2020, then multiply them and return the result
+# Find three numbers that sum to 2020, then multiply them and return the result
 def find_2020(content):
     for x, y, z in itertools.combinations(content, 3):
         if x + y + z == 2020:
