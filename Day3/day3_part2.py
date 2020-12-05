@@ -18,10 +18,9 @@ def find_trees(tree_grid, slopes):
         y = 0
         while y < height:
             x += slope[0]
-            # Loop around if necessary
-            if x > width - 1:
-                x = x % width
             y += slope[1]
+            # Loop around if necessary
+            x %= width
             # If the list index is out of bounds, there's obviously not a tree there. This will allow slopes where ΔY > 1
             try:
                 if tree_grid[y][x] == '#':
