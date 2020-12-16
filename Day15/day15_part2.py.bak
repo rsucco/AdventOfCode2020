@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import time
+
+
+def speak_numbers(data, stopping_point):
+    spoken_nums = [int(num) for num in data.split(',')]
+    all_spoken = set(spoken_nums)
+    start_time = time.time()
+    for turn in range(len(spoken_nums) + 1, stopping_point + 1):
+        if spoken_nums[-1] not in spoken_nums[:-1]:
+            spoken_nums.append(0)
+        else:
+            # Get the index of the penultimate occurance of the number in the list
+            for i in reversed(range(len(spoken_nums) - 1)):
+                if spoken_nums[i] == spoken_nums[-1]:
+                    spoken_nums.append(len(spoken_nums) - 1 - i)
+                    all_spoken.add(spoken_nums[-1])
+                    break
+        if turn % 5000 == 0:
+            spoken_nums = spoken_nums[-2500:]
+            print('total unique numbers:', len(all_spoken))
+            print('turn', turn)
+            print('last spoken:', spoken_nums[-2])
+            print('speaking:', spoken_nums[-1])
+            print('list size', len(spoken_nums))
+            elasped = time.time() - start_time
+            print('elasped time:', elasped)
+            pace = turn / elasped
+            total = stopping_point / pace
+            print('pace:', pace, 'numbers/sec')
+            print('estimated remaining time:', total - elasped, 'seconds')
+            print('=============')
+
+
+if __name__ == '__main__':
+    # Get the absolute path of the current script
+    __location__ = os.path.realpath(os.path.join(
+        os.getcwd(), os.path.dirname(__file__)))
+    # Check for flags
+    if '-t' in sys.argv:
+        filename = 'test_input'
+    else:
+        filename = 'input'
+    with open(os.path.join(__location__, filename)) as f:
+        # Read file into list of strings, one string per line
+        data = f.readline()
+    speak_numbers(data, 30000000)
