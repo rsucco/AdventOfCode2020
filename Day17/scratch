@@ -1,0 +1,18 @@
+    def simulate_reality(self, ticks):
+        for i in range(ticks):
+            # Make sure cubes have room to expand out if necessary
+            self.expand_space()
+            space_sizes = self.get_space_size(self.space)
+            new_space = []
+            ranges = [list(range(dim_size)) for dim_size in space_sizes]
+            print(ranges)
+            all_coords = list(itertools.product(*ranges))
+            print(all_coords)
+            for coords in all_coords:
+                neighbor_count = self.count_neighbors(coords)
+                cube = self.get_cube(coords)
+                new_cube = cube.copy()
+                if cube.active and neighbor_count not in (2, 3):
+                    new_cube = Cube('.')
+                elif not cube.active and neighbor_count == 3:
+                    new_cube = Cube('#')

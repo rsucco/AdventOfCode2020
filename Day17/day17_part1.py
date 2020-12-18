@@ -65,7 +65,9 @@ class Space:
                 line.append(Cube('.'))
                 new_plane.append(new_line)
             new_space.append(new_plane)
+        print('new space:', new_space)
         self.space = new_space
+        print(len(self.space))
 
         # Narrowed down to the last three dimensions, copy the existing space with a border of inactive cubes
         # if not isinstance(space[0][0][0], list):
@@ -93,8 +95,13 @@ class Space:
         count = 0
         for slope in self.SLOPES:
             new_coords = numpy.add(coords, slope)
-            if self.get_cube(new_coords).active:
-                count += 1
+
+            if all(coord >= 0 for coord in new_coords):
+                print(new_coords)
+                if self.get_cube(new_coords).active:
+                    count += 1
+                    print('found a neighbor for', coords, 'at',
+                          new_coords, '| current count:', count)
         return count
 
     def simulate_reality(self, ticks):
@@ -104,17 +111,30 @@ class Space:
             space_sizes = self.get_space_size(self.space)
             new_space = []
             ranges = [list(range(dim_size)) for dim_size in space_sizes]
-            print(ranges)
             all_coords = list(itertools.product(*ranges))
-            print(all_coords)
-            for coords in all_coords:
-                neighbor_count = self.count_neighbors(coords)
-                cube = self.get_cube(coords)
-                new_cube = cube.copy()
-                if cube.active and neighbor_count not in (2, 3):
-                    new_cube = Cube('.')
-                elif not cube.active and neighbor_count == 3:
-                    new_cube = Cube('#')
+            new_space = []
+            for z, plane in enumerate(self.space):
+                new_plane = []
+                for y, line in enumerate(plane):
+                    new_line = []
+                    for x, cube in enumerate(line):
+                        coords = [z, y, x]
+                        neighbor_count = self.count_neighbors(coords)
+                        cube = self.get_cube(coords)
+                        print('coords:', coords)
+                        print('number of neighbors:', neighbor_count)
+                        print('old cube:', cube)
+                        if cube.active and neighbor_count not in (2, 3):
+                            new_cube = Cube('.')
+                        elif not cube.active and neighbor_count == 3:
+                            new_cube = Cube('#')
+                        else:
+                            new_cube = cube.copy()
+
+                        new_line.append(new_cube)
+                    new_plane.append(new_line)
+                new_space.append(new_plane)
+            self.space = new_space[:]
 
     def __get_cube_at(self, coords, space):
         # print(coords)
